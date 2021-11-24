@@ -1,5 +1,5 @@
 build:
-	g++ -std=c++17 .tests/"$(name)".cpp -o "$(name)".out
+	g++ -std=c++17 .tests/"$(name)".cpp -o "$(name)".out -fsanitize=address
 
 test:
 	./"$(name)".out -d yes "[task:$(name)]"

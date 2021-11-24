@@ -3,8 +3,21 @@
 #include <vector>
 #include <string>
 #include <numeric>
+#include <regex>
 
 using namespace std;
+
+std::string ltrim(const std::string &s) {
+    return std::regex_replace(s, std::regex("^\\s+"), std::string(""));
+}
+
+std::string rtrim(const std::string &s) {
+    return std::regex_replace(s, std::regex("\\s+$"), std::string(""));
+}
+
+std::string trim(const std::string &s) {
+    return ltrim(rtrim(s));
+}
 
 void ResizeMatrix(vector<vector<int>> &matrix, size_t row_new_size, size_t column_new_size = -1) {
     if (column_new_size == static_cast<size_t>(-1)) {

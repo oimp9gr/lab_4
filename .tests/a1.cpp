@@ -6,169 +6,146 @@
 
 #include <vector>
 #include <string>
-
+#include <set>
+#include <stdexcept>
 
 using namespace std;
 
 TEST_CASE("a1: Example", "[task:a1]") {
-    vector<vector<int>> lhs = {};
-    vector<vector<int>> rhs = {};
-    SECTION("Example 1") {
-        lhs = {{1, 2}, {1, 2}};
-        rhs = {{1, 2}, {1, 2}};
-        REQUIRE(AreMatricesIdentical(lhs, rhs) == true);
+    ChessPiece rook(PieceType::ROOK, "E5");
+    REQUIRE_FALSE(rook.TryMove("C4"));
+    REQUIRE_FALSE(!rook.TryMove("F5"));
+    REQUIRE(rook.GetCoordinates() == "F5");
+    auto vector_result = rook.GetPossibleMoves();
+    set<string> expected = {"E5", "D5", "C5", "B5", "A5", "F4", "F3", "F2", "F1", "F6", "F7", "F8", "G5", "H5"};
+    set<string> result(vector_result.begin(), vector_result.end());
+    REQUIRE(expected == result);
+}
+
+TEST_CASE("a1: Coordinates of pieces near border", "[task:a1]") {
+    SECTION("Rook near border") {
+        ChessPiece rook(PieceType::ROOK, "A1");
+        set<string> expected = {"A2", "A3", "A4", "A5", "A6", "A7", "A8", "B1", "C1", "D1", "E1", "F1", "G1", "H1"};
+        auto vector_result = rook.GetPossibleMoves();
+        set<string> result(vector_result.begin(), vector_result.end());
+        REQUIRE(expected == result);
     }
 
-    SECTION("Example 2") {
-        lhs = {{1, 2, 3}};
-        rhs = {{3, 2, 1}};
-        REQUIRE(AreMatricesIdentical(lhs, rhs) == false);
+    SECTION("King near border") {
+        ChessPiece king(PieceType::KING, "A1");
+        set<string> expected = {"A2", "B1", "B2"};
+        auto vector_result = king.GetPossibleMoves();
+        set<string> result(vector_result.begin(), vector_result.end());
+        REQUIRE(expected == result);
     }
 
-    SECTION("Example 3") {
-        lhs = {};
-        rhs = {{}};
-        REQUIRE(AreMatricesIdentical(lhs, rhs) == false);
+    SECTION("Knight near border") {
+        ChessPiece knight(PieceType::KNIGHT, "A1");
+        set<string> expected = {"B3", "C2"};
+        auto vector_result = knight.GetPossibleMoves();
+        set<string> result(vector_result.begin(), vector_result.end());
+        REQUIRE(expected == result);
     }
 }
 
-TEST_CASE("a1: Empty matrices are identical", "[task:a1]")
-{
-    vector<vector<int>> lhs = {};
-    vector<vector<int>> rhs = {};
-    SECTION("Zero rows") {
-        REQUIRE(AreMatricesIdentical(lhs, rhs) == true);
-    }
-    SECTION("Zero columns") {
-        lhs = {{}};
-        rhs = {{}};
-        REQUIRE(AreMatricesIdentical(lhs, rhs) == true);
-    }
-}
-
-TEST_CASE("a1: Equality of square matrices", "[task:a1]")
-{
-    vector<vector<int>> lhs = {};
-    vector<vector<int>> rhs = {};
-    SECTION("Of size 1") {
-        SECTION("Equal") {
-            lhs = {{1}};
-            rhs = {{1}};
-            REQUIRE(AreMatricesIdentical(lhs, rhs) == true);
+TEST_CASE("a1: Exception throwing and handling", "[task:a1]") {
+    SECTION("Exception throwing") {
+        SECTION("Rook") {
+            ChessPiece rook(PieceType::ROOK, "A1");
+            REQUIRE_THROWS_AS(rook.Move("B2"), std::invalid_argument);
+            REQUIRE_THROWS_AS(rook.Move("B8"), std::invalid_argument);
+            REQUIRE_THROWS_AS(rook.Move("C8"), std::invalid_argument);
         }
 
-        SECTION("Not equal") {
-            lhs = {{1}};
-            rhs = {{2}};
-            REQUIRE(AreMatricesIdentical(lhs, rhs) == false);
+        SECTION("Knight") {
+            ChessPiece knight(PieceType::KNIGHT, "A1");
+            REQUIRE_THROWS_AS(knight.Move("C3"), std::invalid_argument);
+            REQUIRE_THROWS_AS(knight.Move("B4"), std::invalid_argument);
+            REQUIRE_THROWS_AS(knight.Move("C1"), std::invalid_argument);
+        }
+
+        SECTION("King") {
+            ChessPiece king(PieceType::KING, "A1");
+            REQUIRE_THROWS_AS(king.Move("A3"), std::invalid_argument);
+            REQUIRE_THROWS_AS(king.Move("C1"), std::invalid_argument);
+            REQUIRE_THROWS_AS(king.Move("B3"), std::invalid_argument);
         }
     }
 
-    SECTION("Of size 2") {
-        SECTION("Equal") {
-            lhs = {{1, 1}, {2, 2}};
-            rhs = {{1, 1}, {2, 2}};
-            REQUIRE(AreMatricesIdentical(lhs, rhs) == true);
+    SECTION("Exception handling") {
+        bool actual;
+        SECTION("Rook") {
+            ChessPiece rook(PieceType::ROOK, "A1");
+            actual = false;
+            REQUIRE_NOTHROW(actual |= rook.TryMove("B2"));
+            REQUIRE_NOTHROW(actual |= rook.TryMove("B8"));
+            REQUIRE_NOTHROW(actual |= rook.TryMove("C8"));
+            REQUIRE_FALSE(actual);
         }
 
-        SECTION("Not equal") {
-            lhs = {{1, 1}, {2, 2}};
-            rhs = {{2, 2}, {2, 2}};
-            REQUIRE(AreMatricesIdentical(lhs, rhs) == false);
-        }
-    }
-
-    SECTION("Random size") {
-        size_t size = rand() % 1000;
-        ResizeMatrix(lhs, size);
-        ResizeMatrix(rhs, size);
-        FillMatrixIota(lhs);
-        FillMatrixIota(rhs);
-
-        SECTION("Equal") {
-            REQUIRE(AreMatricesIdentical(lhs, rhs) == true);
+        SECTION("Knight") {
+            ChessPiece knight(PieceType::KNIGHT, "A1");
+            actual = false;
+            REQUIRE_NOTHROW(actual |= knight.TryMove("C3"));
+            REQUIRE_NOTHROW(actual |= knight.TryMove("B4"));
+            REQUIRE_NOTHROW(actual |= knight.TryMove("C1"));
+            REQUIRE_FALSE(actual);
         }
 
-        SECTION("Not equal") {
-            lhs[size - 1][size - 1] = -1 * lhs[size - 1][size - 1];
-            REQUIRE(AreMatricesIdentical(lhs, rhs) == false);
-        }
-    }
-}
-
-TEST_CASE("a1: Equality of non square matrices", "[task:a1]") {
-    vector<vector<int>> lhs = {};
-    vector<vector<int>> rhs = {};
-
-    SECTION("Row count 2, column count 1") {
-        SECTION("Equal") {
-            lhs = {{1}, {2}};
-            rhs = {{1}, {2}};
-            REQUIRE(AreMatricesIdentical(lhs, rhs) == true);
-        }
-
-        SECTION("Not equal") {
-            lhs = {{1}, {2}};
-            rhs = {{1}, {3}};
-            REQUIRE(AreMatricesIdentical(lhs, rhs) == false);
-        }
-    }
-
-    SECTION("Random size") {
-        size_t size_1 = rand() % 1000;
-        size_t size_2 = rand() % 1000;
-        ResizeMatrix(lhs, size_1, size_2);
-        ResizeMatrix(rhs, size_1, size_2);
-        FillMatrixIota(lhs);
-        FillMatrixIota(rhs);
-
-        SECTION("Equal") {
-            REQUIRE(AreMatricesIdentical(lhs, rhs) == true);
-        }
-
-        SECTION("Not equal") {
-            lhs[size_1 - 1][size_2 - 1] = -1 * lhs[size_1 - 1][size_2 - 1];
-            REQUIRE(AreMatricesIdentical(lhs, rhs) == false);
+        SECTION("King") {
+            ChessPiece king(PieceType::KING, "A1");
+            actual = false;
+            REQUIRE_NOTHROW(actual |= king.TryMove("A3"));
+            REQUIRE_NOTHROW(actual |= king.TryMove("C1"));
+            REQUIRE_NOTHROW(actual |= king.TryMove("B3"));
         }
     }
 }
 
-TEST_CASE("a1: Equality of matrices with different sizes", "[task:a1]") {
-    vector<vector<int>> lhs;
-    vector<vector<int>> rhs;
-
-    SECTION("Square matrices") {
-        lhs = {{1, 1}, {2, 2}};
-        rhs = {{1}};
-        REQUIRE(AreMatricesIdentical(lhs, rhs) == false);
-
-        lhs = {{1}};
-        rhs = {{1, 1}, {2, 2}};
-        REQUIRE(AreMatricesIdentical(lhs, rhs) == false);
+TEST_CASE("a1: Test moving using Move and TryMove methods", "[task:a1]") {
+    SECTION("Moving rook") {
+        ChessPiece rook(PieceType::ROOK, "A1");
+        rook.Move("D1");
+        REQUIRE(rook.GetCoordinates() == "D1");
+        rook.Move("D8");
+        REQUIRE(rook.GetCoordinates() == "D8");
+        rook.Move("C8");
+        REQUIRE(rook.GetCoordinates() == "C8");
+        auto vector_result = rook.GetPossibleMoves();
+        set<string> result(vector_result.begin(), vector_result.end());
+        set<string> expected = {"B8", "A8", "D8", "E8", "F8", "G8", "H8", "C1", "C2", "C3", "C4", "C5", "C6", "C7"};
+        REQUIRE(expected == result);
     }
 
-    SECTION("Non square matrices") {
-        lhs = {{1, 1}};
-        rhs = {{1, 1}, {2, 2}};
-        REQUIRE(AreMatricesIdentical(lhs, rhs) == false);
+    SECTION("Moving king") {
+        ChessPiece king(PieceType::KING, "C4");
+        king.Move("D4");
+        REQUIRE(king.GetCoordinates() == "D4");
+        king.Move("D3");
+        REQUIRE(king.GetCoordinates() == "D3");
+        king.Move("E3");
+        REQUIRE(king.GetCoordinates() == "E3");
+        king.Move("F4");
+        REQUIRE(king.GetCoordinates() == "F4");
+        auto vector_result = king.GetPossibleMoves();
+        set<string> result(vector_result.begin(), vector_result.end());
+        set<string> expected = {"E3", "E4", "E5", "F3", "F5", "G3", "G4", "G5"};
+        REQUIRE(expected == result);
     }
-}
 
-TEST_CASE("a1: Const arguments", "[task:a1]") {
-    const vector<vector<int>> lhs = {{1}};
-    const vector<vector<int>> rhs = {{1}};
-    REQUIRE(AreMatricesIdentical(lhs, rhs) == true);
-}
-
-TEST_CASE("a1: Stress test", "[task:a1]") {
-    size_t size = 10;
-    vector<vector<int>>lhs(size, vector<int>(size));
-    vector<vector<int>>rhs(size, vector<int>(size));
-    FillMatrixIota(lhs);
-    FillMatrixIota(rhs);
-    uint32_t counter = 0;
-    for (size_t i = 0; i < 500000; ++i) {
-        counter += static_cast<uint32_t>(AreMatricesIdentical(lhs, rhs));
+    SECTION("Moving knight") {
+        ChessPiece knight(PieceType::KNIGHT, "A1");
+        knight.Move("B3");
+        REQUIRE(knight.GetCoordinates() == "B3");
+        knight.Move("D2");
+        REQUIRE(knight.GetCoordinates() == "D2");
+        knight.Move("E4");
+        REQUIRE(knight.GetCoordinates() == "E4");
+        knight.Move("C5");
+        REQUIRE(knight.GetCoordinates() == "C5");
+        auto vector_result = knight.GetPossibleMoves();
+        set<string> result(vector_result.begin(), vector_result.end());
+        set<string> expected = {"A6", "A4", "B3", "B7", "D3", "D7", "E4", "E6"};
+        REQUIRE(expected == result);
     }
-    REQUIRE(counter == 500000);
 }
