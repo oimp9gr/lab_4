@@ -2,7 +2,7 @@
 
 #include "catch.hpp"
 #include "util.h"
-#include "../solutions/a1.h"
+#include "../solutions/c1.h"
 
 #include <vector>
 #include <string>
@@ -11,7 +11,7 @@
 
 using namespace std;
 
-TEST_CASE("a1: Example", "[task:a1]") {
+TEST_CASE("c1: Example", "[task:c1]") {
     ChessPiece rook(PieceType::ROOK, "E5");
     REQUIRE_FALSE(rook.TryMove("C4"));
     REQUIRE_FALSE(!rook.TryMove("F5"));
@@ -22,7 +22,7 @@ TEST_CASE("a1: Example", "[task:a1]") {
     REQUIRE(expected == result);
 }
 
-TEST_CASE("a1: Coordinates of pieces near border", "[task:a1]") {
+TEST_CASE("c1: Coordinates of pieces near border", "[task:c1]") {
     SECTION("Rook near border") {
         ChessPiece rook(PieceType::ROOK, "A1");
         set<string> expected = {"A2", "A3", "A4", "A5", "A6", "A7", "A8", "B1", "C1", "D1", "E1", "F1", "G1", "H1"};
@@ -48,7 +48,7 @@ TEST_CASE("a1: Coordinates of pieces near border", "[task:a1]") {
     }
 }
 
-TEST_CASE("a1: Exception throwing and handling", "[task:a1]") {
+TEST_CASE("c1: Exception throwing and handling", "[task:c1]") {
     SECTION("Exception throwing") {
         SECTION("Rook") {
             ChessPiece rook(PieceType::ROOK, "A1");
@@ -102,7 +102,7 @@ TEST_CASE("a1: Exception throwing and handling", "[task:a1]") {
     }
 }
 
-TEST_CASE("a1: Test moving using Move and TryMove methods", "[task:a1]") {
+TEST_CASE("c1: Test moving using Move and TryMove methods", "[task:c1]") {
     SECTION("Moving rook") {
         ChessPiece rook(PieceType::ROOK, "A1");
         rook.Move("D1");

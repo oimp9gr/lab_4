@@ -17,9 +17,9 @@ public:
         vector<string> result_rows;
         ifs.open(file);
         while (getline(ifs, row)) {
-            int result;
+            int64_t result;
             stringstream ss(row);
-            int lhs, rhs;
+            int64_t lhs, rhs;
             char operation;
             ss >> lhs >> operation >> rhs;
             if (operation == '+') {
