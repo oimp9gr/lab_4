@@ -4,7 +4,12 @@
 #include "util.h"
 #include "../solutions/b1.h"
 
+#include <string>
+
 static const string file = "input.txt";
+
+using util::trim;
+using namespace std;
 
 string GetActual() {
     ifstream ifs(file);
