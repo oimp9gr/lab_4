@@ -8,17 +8,53 @@
 namespace util {
 using namespace std;
 
+class ForbiddenString {
+public:
+    ForbiddenString() {
+        throw std::logic_error("std::string and char usage is forbidden");
+    }
 
-    class ForbiddenString {
-    public:
-        ForbiddenString() {
-            throw std::logic_error("std::string and char usage is forbidden");
-        }
+    ForbiddenString(const char *) {
+        throw std::logic_error("std::string and char usage is forbidden");
+    }
+};
 
-        ForbiddenString(const char *) {
-            throw std::logic_error("std::string and char usage is forbidden");
+template<class T>
+class ForbiddenVector {
+    ForbiddenVector() {
+        throw std::logic_error("std::vector usage is forbidden");
+    }
+};
+
+class ForbiddenOnlyString {
+    ForbiddenOnlyString() {
+        throw std::logic_error("std::string usage is forbidden");
+    }
+};
+
+template<class T>
+class MyVector : public vector<T> {
+public:
+    using std::vector<T>::vector;
+    using std::vector<T>::operator=;
+    MyVector() = default;
+    MyVector(MyVector const &) = default;
+    MyVector(MyVector &&) = default;
+    MyVector &operator=(MyVector const &) = default;
+    MyVector &operator=(MyVector &&) = default;
+    MyVector(std::initializer_list<T> il) {
+        for (auto v : il) {
+            this->push_back(v);
         }
-    };
+    }
+};
+
+class MyString : public string {
+public:
+    string &GetString() {
+        return *this;
+    }
+};
 
 class ForbiddenStack {
 public:
@@ -42,43 +78,43 @@ public:
     }
 };
 
-    //#define string ForbiddenString
+//#define string ForbiddenString
 
 
-    std::string ltrim(const std::string &s) {
-        return std::regex_replace(s, std::regex("^\\s+"), std::string(""));
+std::string ltrim(const std::string &s) {
+    return std::regex_replace(s, std::regex("^\\s+"), std::string(""));
+}
+
+std::string rtrim(const std::string &s) {
+    return std::regex_replace(s, std::regex("\\s+$"), std::string(""));
+}
+
+std::string trim(const std::string &s) {
+    return ltrim(rtrim(s));
+}
+
+void ResizeMatrix(vector<vector<int>> &matrix, size_t row_new_size, size_t column_new_size = -1) {
+    if (column_new_size == static_cast<size_t>(-1)) {
+        column_new_size = row_new_size;
     }
-
-    std::string rtrim(const std::string &s) {
-        return std::regex_replace(s, std::regex("\\s+$"), std::string(""));
+    matrix.resize(row_new_size);
+    for (auto &row: matrix) {
+        row.resize(column_new_size);
     }
+}
 
-    std::string trim(const std::string &s) {
-        return ltrim(rtrim(s));
+void FillMatrixIota(vector<vector<int>> &matrix, int start = 0) {
+    for (auto &row: matrix) {
+        iota(row.begin(), row.end(), start);
     }
+}
 
-    void ResizeMatrix(vector<vector<int>> &matrix, size_t row_new_size, size_t column_new_size = -1) {
-        if (column_new_size == static_cast<size_t>(-1)) {
-            column_new_size = row_new_size;
-        }
-        matrix.resize(row_new_size);
-        for (auto &row: matrix) {
-            row.resize(column_new_size);
-        }
+string GenerateStringFromAlphabet(const vector<char> &alphabet, size_t size) {
+    string result;
+    for (size_t i = 0; i < size; ++i) {
+        result += alphabet[rand() % alphabet.size()];
     }
-
-    void FillMatrixIota(vector<vector<int>> &matrix, int start = 0) {
-        for (auto &row: matrix) {
-            iota(row.begin(), row.end(), start);
-        }
-    }
-
-    string GenerateStringFromAlphabet(const vector<char> &alphabet, size_t size) {
-        string result;
-        for (size_t i = 0; i < size; ++i) {
-            result += alphabet[rand() % alphabet.size()];
-        }
-        return result;
-    }
+    return result;
+}
 
 }
