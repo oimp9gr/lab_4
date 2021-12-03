@@ -258,7 +258,7 @@ int main() {
 такой элемент не был найден возвращает <code>false</code>, если был найден и был удалён, возвращает <code>true</code></li>
 <li><code>void Insert(int pos, int value)</code> - Добавляет элемент в позицию <code>pos</code>.  
 Если размер списка меньше <code>pos</code>, выбрасывает исключение <code>std::out_of_range</code></li>
-<li><code>string Print(int where, int value)</code> - Возвращает строку содержащую элементы списка через пробел</li>
+<li><code>string Print()</code> - Возвращает строку содержащую элементы списка через пробел</li>
 </ul>
 
 ```c++
