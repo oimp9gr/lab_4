@@ -51,7 +51,7 @@
 <li><code>void Push(int value)</code> - добавляет элемент в конец списка</li>
 <li><code>int Pop()</code> - удаляет последний элемент из стека и возвращает его значение. Выбрасывает исключение
 <code>std::out_of_range</code> (необходимо подключить библиотеку <code>stdexcept</code>), если стек пустой</li>
-<li><code>string Print(int where, int value)</code> - Возвращает строку содержащую элементы стека через пробел</li>
+<li><code>string Print()</code> - Возвращает строку содержащую элементы стека через пробел</li>
 </ul>
 
 ```c++
@@ -128,7 +128,7 @@ isValidParentheses("{[]}") -> true
 ```c++
 MakeMark(3,3); // true
 MakeMark(3,3); // false
-MakeMark(1,2); // false
+MakeMark(1,2); // true
 ```
 
 Выполнение данного кода должно изменять вид поля на следующий.
