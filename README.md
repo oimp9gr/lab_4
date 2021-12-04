@@ -141,9 +141,6 @@ MakeMark(1,2); // true
 
 </li>
 
-<li>
-</li>
-
 </ol>
 
 
