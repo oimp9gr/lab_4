@@ -67,6 +67,13 @@ public:
     }
 };
 
+class ForbiddenQueue {
+public:
+    ForbiddenQueue() {
+        throw std::logic_error("std::queue usage is forbidden");
+    }
+};
+
 class ForbiddenList {
 public:
     ForbiddenList() {

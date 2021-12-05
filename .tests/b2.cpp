@@ -126,7 +126,7 @@ TEST_CASE("b2: Test operations", "[task:b2]") {
     }
 }
 
-TEST_CASE("b2: Test PrintDivisionResult", "[task:b2]") {
+TEST_CASE("b2: Test PrintMultiplicationResult", "[task:b2]") {
     SECTION("Overflow") {
         Number n1(200000000);
         REQUIRE(PrintMultiplicationResult(n1, n1) == "overflow: 40000000000000000");
