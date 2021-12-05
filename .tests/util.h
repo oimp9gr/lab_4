@@ -21,12 +21,14 @@ public:
 
 template<class T>
 class ForbiddenVector {
+public:
     ForbiddenVector() {
         throw std::logic_error("std::vector usage is forbidden");
     }
 };
 
 class ForbiddenOnlyString {
+public:
     ForbiddenOnlyString() {
         throw std::logic_error("std::string usage is forbidden");
     }
@@ -67,6 +69,14 @@ public:
     }
 };
 
+template<class T=int>
+class ForbiddenQueue {
+public:
+    ForbiddenQueue() {
+        throw std::logic_error("std::queue usage is forbidden");
+    }
+};
+
 class ForbiddenList {
 public:
     ForbiddenList() {
@@ -77,8 +87,6 @@ public:
         throw std::logic_error("std::list usage is forbidden");
     }
 };
-
-//#define string ForbiddenString
 
 
 std::string ltrim(const std::string &s) {
