@@ -6,10 +6,11 @@
 
 #include <string>
 
+using namespace std;
+
 static const string file = "input.txt";
 
 using util::trim;
-using namespace std;
 
 string GetActual() {
     ifstream ifs(file);
