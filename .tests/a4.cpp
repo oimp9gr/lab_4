@@ -40,6 +40,12 @@ TEST_CASE("a4: Check unbalanced", "[task:a4]") {
         REQUIRE(isValidParentheses("[)") == false);
     }
 
+    SECTION("No wrong sequences") {
+        REQUIRE(isValidParentheses("{()]") == false);
+        REQUIRE(isValidParentheses("[()}") == false);
+        REQUIRE(isValidParentheses("{[[]]]") == false);
+    }
+
     SECTION("Complicated") {
         REQUIRE(isValidParentheses("{([]([)[]])}") == false);
         REQUIRE(isValidParentheses("{{({{[]}})}]}") == false);
